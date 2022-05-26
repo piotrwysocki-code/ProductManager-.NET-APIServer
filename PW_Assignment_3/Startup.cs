@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using PW_Assignment_3.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,10 +27,11 @@ namespace PW_Assignment_3
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var conn = ConfigurationManager.ConnectionStrings["productmanager"];
             services.AddDbContext<Site_DBContext>(opt =>
-            {
-                opt.UseSqlServer(Configuration["ConnectionStrings:BSConn"]);
-            }
+                {
+                    opt.UseSqlServer(conn.ConnectionString);
+                }
             );
             services.AddScoped<IProductRepo, ProductRepository>();
             services.AddScoped<ICategoryRepo, CategoryRepository>();
