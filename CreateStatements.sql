@@ -1,8 +1,19 @@
-﻿INSERT INTO Category (CategoryId, CategoryName) 
-VALUES (1, 'Electronics');
+﻿CREATE TABLE Category(
+	CategoryId INTEGER PRIMARY KEY,
+	CategoryName VARCHAR(100)
+);
 
-INSERT INTO Category (CategoryId, CategoryName) 
-VALUES (2, 'Housewares');
+DELETE FROM Product;
+
+DROP TABLE Product;
+
+CREATE TABLE Product(
+	ProductId INTEGER PRIMARY KEY,
+	ProductName VARCHAR(100),
+	Price FLOAT,
+	CategoryId INTEGER,
+	FOREIGN KEY (CategoryId) REFERENCES Category(CategoryId)
+);
 
 INSERT INTO Product (ProductId, ProductName, Price, CategoryId) 
 VALUES (1, 'Stovetop Popper', 12.99, 1);

@@ -17,7 +17,7 @@ namespace PW_Assignment_3
         public string ProductName { get; set; }
         [Required]
         [Column(TypeName = "float")]
-        public double? Price { get; set; }
+        public decimal? Price { get; set; }
         [Required]
         [Column(TypeName = "int")]
         public int? CategoryId { get; set; }
