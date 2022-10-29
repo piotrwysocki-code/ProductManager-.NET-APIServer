@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace PW_Assignment_3.Models
@@ -19,33 +20,67 @@ namespace PW_Assignment_3.Models
 
         public Product AddProduct(Product product)
         {
-            Product temp = Products.Where(x => x.ProductId == product.ProductId).FirstOrDefault();
-            if(temp != null)
+
+            if (product.ProductId != null && !product.ProductId.Equals("")
+                && product.ProductName != null && !product.ProductName.Equals("")
+                && product.Price != null && !product.Price.Equals("")
+                && product.CategoryId != null && !product.CategoryId.Equals(""))
             {
-                RemoveProduct(temp.ProductId);
-                _dbContext.Products.Add(product);
-            }
-            else
-            {
-                _dbContext.Products.Add(product);
+                try
+                {
+                    Product temp = Products.Where(x => x.ProductId == product.ProductId).FirstOrDefault();
+                    if (temp != null)
+                    {
+                        RemoveProduct(temp.ProductId);
+                        _dbContext.Products.Add(product);
+                    }
+                    else
+                    {
+                        int maxId = (_dbContext.Products.Select(x => (int?)x.ProductId).Max() ?? 0) + 1;
+                        product.ProductId = maxId;
+
+                        _dbContext.Products.Add(product);
+                    }
+
+                    _dbContext.SaveChanges();
+
+                    return product;
+                }
+                catch(DbUpdateException ex)
+                {
+                    Console.WriteLine(ex);
+                }
             }
 
-            _dbContext.SaveChanges();
-
-            return product;            
+            return null;
         }
 
         public void RemoveProduct(int id)
         {
-            Product p = (Product)_dbContext.Products.Where(x => x.ProductId == id).FirstOrDefault();
-            _dbContext.Products.Remove(p);
-            _dbContext.SaveChanges();
+            try
+            {
+                Product p = (Product)_dbContext.Products.Where(x => x.ProductId == id).FirstOrDefault();
+                _dbContext.Products.Remove(p);
+                _dbContext.SaveChanges();
+            }catch(DbUpdateException ex)
+            {
+                Console.WriteLine(ex);
+            }
+
         }
 
         public Product UpdateProduct(Product product)
         {
-            AddProduct(product);
-            _dbContext.SaveChanges();
+            try
+            {
+                AddProduct(product);
+                _dbContext.SaveChanges();
+            }
+            catch (DbUpdateException e)
+            {
+                return null;
+            }
+
             return product;
         }
 

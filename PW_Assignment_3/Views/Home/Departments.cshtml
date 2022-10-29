@@ -1,0 +1,40 @@
+﻿@model IQueryable<Department>
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "PW_3";
+}
+
+<form id="addform" asp-action="addDepartment" method=post>
+    <div class="form-group">
+        <label for="DeptId">ID: </label>
+        <input class="form-control" name="DeptId" required>
+    </div>
+    <div class="form-group">
+        <label for="DeptName">Name: </label>
+        <input class="form-control" name="DeptName">
+    </div>
+    <div class="text-center panel-body">
+        <button type="submit" class="btn btn-primary">Add Department</button>
+    </div>
+</form>
+
+    <table class="table table-bordered table-striped m-2">
+        <thead>
+            <tr>
+                <th>Department ID</th>
+                <th>Name</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.DeptId</td>
+                    <td>@item.DeptName</td>
+
+                </tr>
+            }
+        </tbody>
+    </table>

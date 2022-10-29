@@ -1,0 +1,50 @@
+﻿@model IQueryable<Sale>
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "PW_3";
+}
+
+    <form id="addform" asp-action="addSale" method=post>
+        <div class="form-group">
+            <label for="SaleID">ID: </label>
+            <input type="number" class="form-control" name="SaleID" required>
+        </div>
+        <div class="form-group">
+            <label for="SaleDate">Date: </label>
+            <input type="date" class="form-control" name="SaleDate">
+        </div>
+        <div class="form-group">
+            <label for="Total">Total: </label>
+            <input type="number" class="form-control" name="Total">
+        </div>
+        <div class="form-group">
+            <label for="EmployeeId">Employee ID: </label>
+            <input type="number" class="form-control" name="EmployeeId">
+        </div>
+        <div class="text-center panel-body">
+            <button type="submit" class="btn btn-primary">Add Sale</button>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-striped m-2">
+        <thead>
+            <tr>
+                <th>Sale ID</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Employee ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.SaleId</td>
+                    <td>@item.SaleDate</td>
+                    <td>$@item.Total</td>
+                    <td>@item.EmployeeId</td>
+                </tr>
+            }
+        </tbody>
+    </table>

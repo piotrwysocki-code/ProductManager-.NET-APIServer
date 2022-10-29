@@ -27,6 +27,7 @@ namespace PW_Assignment_3
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
             var conn = ConfigurationManager.ConnectionStrings["productmanager"];
             services.AddDbContext<Site_DBContext>(opt =>
                 {
@@ -35,6 +36,12 @@ namespace PW_Assignment_3
             );
             services.AddScoped<IProductRepo, ProductRepository>();
             services.AddScoped<ICategoryRepo, CategoryRepository>();
+            services.AddScoped<IEmployeeRepo, EmployeeRepository>();
+            services.AddScoped<ISalesRepo, SalesRepository>();
+            services.AddScoped<ISalesProdRepo, SalesProdRepository>();
+            services.AddScoped<IDepartmentRepo, DepartmentRepository>();
+
+
             services.AddRazorPages();
             services.AddControllersWithViews().AddNewtonsoftJson(); 
             services.AddSwaggerGen(c =>
@@ -42,7 +49,7 @@ namespace PW_Assignment_3
                 c.SwaggerDoc("Version1", new Microsoft.OpenApi.Models.OpenApiInfo
                 {
                     Version = "V1",
-                    Title = "Assignment 3 PW",
+                    Title = "Dashboard API",
                     TermsOfService = new System.Uri("https://sheridancollege.ca"),
                     Contact = new Microsoft.OpenApi.Models.OpenApiContact
                     {
@@ -61,6 +68,8 @@ namespace PW_Assignment_3
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -71,7 +80,7 @@ namespace PW_Assignment_3
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSwaggerUI(c =>
             {

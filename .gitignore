@@ -10,6 +10,7 @@
 *.userosscache
 *.sln.docstates
 PW_Assignment_3/ConnectionStrings.config
+PW_Assignment_3/Properties/launchSettings.json
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
