@@ -13,6 +13,9 @@ namespace PW_Assignment_3.Models
 
         Category AddCategory(Category category);
 
+        Category AddCategoryByName(string name);
+
+
         bool RemoveCategory(int id);
 
         Category UpdateCategory(Category category);

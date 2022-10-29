@@ -13,24 +13,24 @@ namespace PW_Assignment_3.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class SalesController : ControllerBase
     {
-        private IProductRepo repo;
+        private ISalesRepo repo;
 
-        public ProductController(IProductRepo repo)
+        public SalesController(ISalesRepo repo)
         {
             this.repo = repo;
         }
 
         [HttpGet]
-        public ActionResult<List<Product>> GetProduct()
+        public ActionResult<List<Sale>> GetSale()
         {
-            return Ok(repo.Products);
+            return Ok(repo.Sales);
         }
 
 
         [HttpGet("{id}")]
-        public ActionResult<Product> GetProduct(int id)
+        public ActionResult<Sale> GetSale(int id)
         {
             if (id == 0)
             {
@@ -38,23 +38,23 @@ namespace PW_Assignment_3.Controllers
             }
             return Ok(repo[id]);
         }
-        
+
         [HttpPost]
-        public Product Post([FromBody] Product product) =>
-            repo.AddProduct(product);
+        public Sale Post([FromBody] Sale sale) =>
+            repo.AddSale(sale);
 
         [HttpPut]
-        public Product Put([FromBody, FromForm] Product product) =>
-            repo.UpdateProduct(product);
+        public Sale Put([FromBody, FromForm] Sale sale) =>
+            repo.UpdateSale(sale);
 
         [HttpDelete("{id}")]
-        public void Delete(int id) => repo.RemoveProduct(id);
+        public void Delete(int id) => repo.RemoveSale(id);
 
 
         [HttpPatch("{id}")]
-        public StatusCodeResult Patch(int id, [FromBody] JsonPatchDocument<Product> patchDocument)
+        public StatusCodeResult Patch(int id, [FromBody] JsonPatchDocument<Sale> patchDocument)
         {
-            var res = (Product)((OkObjectResult)GetProduct(id).Result).Value;
+            var res = (Sale)((OkObjectResult)GetSale(id).Result).Value;
             if (res != null)
             {
                 patchDocument.ApplyTo(res);
@@ -63,6 +63,6 @@ namespace PW_Assignment_3.Controllers
             }
             return NotFound();
         }
-
     }
+    
 }

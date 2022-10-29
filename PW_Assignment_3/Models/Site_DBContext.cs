@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace PW_Assignment_3
+namespace PW_Assignment_3.Models
 {
     public partial class Site_DBContext : DbContext
     {
@@ -18,7 +18,11 @@ namespace PW_Assignment_3
         }
 
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Department> Departments { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Sale> Sales { get; set; }
+        public virtual DbSet<SalesProd> SalesProds { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -37,8 +41,49 @@ namespace PW_Assignment_3
                 entity.Property(e => e.CategoryId).ValueGeneratedNever();
 
                 entity.Property(e => e.CategoryName)
-                    .IsRequired()
+                    .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Department>(entity =>
+            {
+                entity.HasKey(e => e.DeptId)
+                    .HasName("PK_Dept");
+
+                entity.Property(e => e.DeptId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("deptId");
+
+                entity.Property(e => e.DeptName)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("deptName");
+            });
+
+            modelBuilder.Entity<Employee>(entity =>
+            {
+                entity.Property(e => e.employeeId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("employeeId");
+
+                entity.Property(e => e.city)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("city");
+
+                entity.Property(e => e.deptId).HasColumnName("deptId");
+
+                entity.Property(e => e.firstName)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("firstName");
+
+                entity.Property(e => e.lastName)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("lastName");
+
+                entity.Property(e => e.salary).HasColumnName("salary");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -47,12 +92,37 @@ namespace PW_Assignment_3
 
                 entity.Property(e => e.ProductId).ValueGeneratedNever();
 
-                entity.Property(e => e.ProductName).IsUnicode(false);
+                entity.Property(e => e.ProductName)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
-                entity.HasOne(d => d.Category)
-                    .WithMany(p => p.Products)
-                    .HasForeignKey(d => d.CategoryId)
-                    .HasConstraintName("FK_Category_Product");
+            });
+
+            modelBuilder.Entity<Sale>(entity =>
+            {
+                entity.Property(e => e.SaleId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("saleId");
+
+                entity.Property(e => e.SaleDate)
+                    .HasColumnType("date")
+                    .HasColumnName("saleDate");
+
+                entity.Property(e => e.Total)
+                    .HasMaxLength(255)
+                    .IsUnicode(false)
+                    .HasColumnName("total");
+            });
+
+            modelBuilder.Entity<SalesProd>(entity =>
+            {
+                entity.HasKey(e => new { e.SaleId, e.ProductId });
+
+                entity.ToTable("SalesProd");
+
+                entity.Property(e => e.SaleId).HasColumnName("saleId");
+
+                entity.Property(e => e.ProductId).HasColumnName("productId");
             });
 
             OnModelCreatingPartial(modelBuilder);
@@ -60,4 +130,5 @@ namespace PW_Assignment_3
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
+
 }

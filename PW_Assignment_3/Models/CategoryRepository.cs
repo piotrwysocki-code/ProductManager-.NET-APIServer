@@ -18,33 +18,61 @@ namespace PW_Assignment_3.Models
 
         public Category this[int id] => (Category)_dbContext.Categories.Where(x => x.CategoryId == id).FirstOrDefault() != null ? (Category)_dbContext.Categories.Where(x => x.CategoryId == id).FirstOrDefault() : null;
 
+        public Category AddCategoryByName(string category)
+        {
+            Category temp = new Category();
+            temp.CategoryName = category;
+            int maxId = (_dbContext.Categories.Select(x => (int?)x.CategoryId).Max() ?? 0) + 1;
+            temp.CategoryId = maxId;
+
+            try
+            {
+                _dbContext.Categories.Add(temp);
+                _dbContext.SaveChanges();
+
+            }
+            catch (DbUpdateException ex)
+            {
+                return null;
+            }
+        
+
+            return temp;
+        }
+
         public Category AddCategory(Category category)
         {
-            Category temp = (Category)_dbContext.Categories.Where(x => x.CategoryId == category.CategoryId).FirstOrDefault();
-            if (temp != null)
+            Category temp = category;
+            int maxId = (int)_dbContext.Categories.Max(x => x.CategoryId);
+            temp.CategoryId = maxId + 1;
+            try
             {
-                _dbContext.Remove(temp);
-                _dbContext.Categories.Add(category);
+                _dbContext.Categories.Add(temp);
+                _dbContext.SaveChanges();
+
             }
-            else
+            catch (DbUpdateException ex)
             {
-                _dbContext.Categories.Add(category);
+                return null;
             }
-            _dbContext.SaveChanges();
-            return category;
+
+            return temp;
         }
+
 
         public bool RemoveCategory(int id)
         {
             Category p = (Category)_dbContext.Categories.Where(x => x.CategoryId == id).FirstOrDefault();
-            _dbContext.Categories.Remove(p);
             
             try
             {
+                _dbContext.Categories.Remove(p);
+
                 _dbContext.SaveChanges();
             }
             catch (DbUpdateException ex)
             {
+                Console.WriteLine(ex);
                 return false;
             }
 
@@ -57,13 +85,22 @@ namespace PW_Assignment_3.Models
             if (temp != null)
             {
                 _dbContext.Remove(temp);
-                _dbContext.Categories.Add(category);
+                _dbContext.Add(category);
             }
             else
             {
-                _dbContext.Categories.Add(category);
+                AddCategory(category);
             }
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.SaveChanges();
+
+            }
+            catch(DbUpdateException e)
+            {
+                Console.WriteLine("error" + e);
+            }
+
             return category;
         }
 

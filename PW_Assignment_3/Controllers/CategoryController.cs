@@ -23,6 +23,7 @@ namespace PW_Assignment_3.Controllers
         [HttpGet]
         public ActionResult<List<Category>> GetCategory()
         {
+            System.Diagnostics.Debug.WriteLine("Hello from get all");
             return Ok(repo.Categories);
         }
 
@@ -40,8 +41,15 @@ namespace PW_Assignment_3.Controllers
         public Category Post([FromBody] Category category) =>
             repo.AddCategory(category);
 
+        [HttpPost("{name}")]
+        public Category Post(string name)
+        {
+            Category temp = repo.AddCategoryByName(name);
+            return temp;
+        }
+
         [HttpPut]
-        public Category Put([FromForm] Category category) =>
+        public Category Put([FromBody, FromForm] Category category) =>
             repo.UpdateCategory(category);
 
         [HttpDelete("{id}")]

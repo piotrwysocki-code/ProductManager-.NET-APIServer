@@ -13,24 +13,24 @@ namespace PW_Assignment_3.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class EmployeesController : ControllerBase
     {
-        private IProductRepo repo;
+        private IEmployeeRepo repo;
 
-        public ProductController(IProductRepo repo)
+        public EmployeesController(IEmployeeRepo repo)
         {
             this.repo = repo;
         }
 
         [HttpGet]
-        public ActionResult<List<Product>> GetProduct()
+        public ActionResult<List<Employee>> GetEmployee()
         {
-            return Ok(repo.Products);
+            return Ok(repo.Employees);
         }
 
 
         [HttpGet("{id}")]
-        public ActionResult<Product> GetProduct(int id)
+        public ActionResult<Employee> GetEmployee(int id)
         {
             if (id == 0)
             {
@@ -38,23 +38,23 @@ namespace PW_Assignment_3.Controllers
             }
             return Ok(repo[id]);
         }
-        
+
         [HttpPost]
-        public Product Post([FromBody] Product product) =>
-            repo.AddProduct(product);
+        public Employee Post([FromBody] Employee employee) =>
+            repo.AddEmployee(employee);
 
         [HttpPut]
-        public Product Put([FromBody, FromForm] Product product) =>
-            repo.UpdateProduct(product);
+        public Employee Put([FromBody, FromForm] Employee employee) =>
+            repo.UpdateEmployee(employee);
 
         [HttpDelete("{id}")]
-        public void Delete(int id) => repo.RemoveProduct(id);
+        public void Delete(int id) => repo.RemoveEmployee(id);
 
 
         [HttpPatch("{id}")]
-        public StatusCodeResult Patch(int id, [FromBody] JsonPatchDocument<Product> patchDocument)
+        public StatusCodeResult Patch(int id, [FromBody] JsonPatchDocument<Employee> patchDocument)
         {
-            var res = (Product)((OkObjectResult)GetProduct(id).Result).Value;
+            var res = (Employee)((OkObjectResult)GetEmployee(id).Result).Value;
             if (res != null)
             {
                 patchDocument.ApplyTo(res);
@@ -63,6 +63,6 @@ namespace PW_Assignment_3.Controllers
             }
             return NotFound();
         }
-
     }
+    
 }
